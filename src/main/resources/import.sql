@@ -1,0 +1,1 @@
+insert into ACCOUNT (account_Id, BALANCE) values (ACCOUNT_SEQ.nextval, 2000.00);
