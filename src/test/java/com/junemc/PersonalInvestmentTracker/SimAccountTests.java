@@ -11,7 +11,7 @@ import com.junemc.PersonalInvestmentTracker.service.AccountService;
 
 
 @SpringBootTest
-class PersonalInvestmentTrackerApplicationTests {
+class SimAccountTests {
 	
 	@Autowired 
 	private AccountService accountService;
@@ -26,7 +26,9 @@ class PersonalInvestmentTrackerApplicationTests {
 		Account testAccount = new Account(0.00);
 		testAccount.setBalance(1000.00);
 		accountService.save(testAccount);
-		Account accountFromDb = accountService.retrieveAccountById(1l).get();
+		Account accountFromDb = accountService.retrieveAccountById(2l).get();
 		assertEquals(1000.00, accountFromDb.getBalance());
 	}
+	
+	
  }
