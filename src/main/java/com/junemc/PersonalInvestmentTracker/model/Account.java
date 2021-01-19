@@ -15,6 +15,16 @@ public class Account {
 	@SequenceGenerator(name="account_gen", sequenceName="ACCOUNT_SEQ", allocationSize=1)
 	private long accountId;
 	
+	
+	@Column
+	private String firstname;
+	
+	@Column
+	private String lastname;
+	
+	@Column
+	private String accountAlias;
+	
 	@Column
 	private double balance;
 
@@ -39,6 +49,56 @@ public class Account {
 	public void setBalance(double balance) {
 		this.balance = balance;
 	}
+	
+	
+
+	public long getAccountId() {
+		return accountId;
+	}
+
+
+
+	public void setAccountId(long accountId) {
+		this.accountId = accountId;
+	}
+
+
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+
+
+	public String getLastname() {
+		return lastname;
+	}
+
+
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+
+
+	public String getAccountAlias() {
+		return accountAlias;
+	}
+
+
+
+	public void setAccountAlias(String accountAlias) {
+		this.accountAlias = accountAlias;
+	}
+
+
 
 	@Override
 	public int hashCode() {

@@ -16,7 +16,7 @@ import com.junemc.PersonalInvestmentTracker.model.Account;
 import com.junemc.PersonalInvestmentTracker.service.AccountService;
 
 @RestController
-@RequestMapping("/app/v1/account")
+@RequestMapping("/api/v1/account")
 @CrossOrigin(origins = "http://localhost:3000")
 public class AccountAPI {
 
@@ -31,8 +31,8 @@ public class AccountAPI {
 		if (account.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
+		System.err.println(account);
 		return ResponseEntity.ok(account.get());
-
 	}
 
 }
