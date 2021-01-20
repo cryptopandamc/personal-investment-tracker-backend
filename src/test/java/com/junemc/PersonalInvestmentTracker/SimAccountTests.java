@@ -42,6 +42,16 @@ class SimAccountTests {
 		assertNotEquals(currentBalance, updatedBalance);
 	}
 	
+	@Test
+	void test_ThatADepositCanBeDecreased() {
+		Account accountToUpdate = accountService.retrieveAccountById(1l).get();
+		double currentBalance = accountToUpdate.getBalance();
+		currentBalance = currentBalance - 1500;
+		Account updatedAccount = accountService.update(accountToUpdate);
+		double updatedBalance = updatedAccount.getBalance();
+		assertNotEquals(currentBalance, updatedBalance);
+	}
+	
 	
 	
  }
