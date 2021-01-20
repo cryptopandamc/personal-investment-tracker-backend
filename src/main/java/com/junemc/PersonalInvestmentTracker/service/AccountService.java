@@ -29,4 +29,8 @@ public class AccountService {
 		return accountDao.findById(accountId);
 	}
 
+	public Account update(Account account) {
+		return accountDao.save(account);
+	}
+
 }
