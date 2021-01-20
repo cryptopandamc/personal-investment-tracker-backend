@@ -37,7 +37,7 @@ class SimAccountTests {
 		double currentBalance = accountToUpdate.getBalance();
 		currentBalance = currentBalance + 1000;
 		accountService.update(accountToUpdate);
-		Account updatedAccount = accountService.update(accountToUpdate);
+		Account updatedAccount = accountService.retrieveAccountById(1l).get();
 		double updatedBalance = updatedAccount.getBalance();
 		assertNotEquals(currentBalance, updatedBalance);
 	}
@@ -47,7 +47,8 @@ class SimAccountTests {
 		Account accountToUpdate = accountService.retrieveAccountById(1l).get();
 		double currentBalance = accountToUpdate.getBalance();
 		currentBalance = currentBalance - 1500;
-		Account updatedAccount = accountService.update(accountToUpdate);
+		accountService.update(accountToUpdate);
+		Account updatedAccount = accountService.retrieveAccountById(1l).get();
 		double updatedBalance = updatedAccount.getBalance();
 		assertNotEquals(currentBalance, updatedBalance);
 	}
