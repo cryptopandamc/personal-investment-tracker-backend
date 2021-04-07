@@ -24,7 +24,7 @@ class SimAccountTests {
 	
 	@Test
 	void test_ThatAUserCanAddFiatFunds() {
-		Account testAccount = new Account(0.00);
+		Account testAccount = new Account("sim account", 0.00);
 		testAccount.setBalance(1000.00);
 		accountService.save(testAccount);
 		Account accountFromDb = accountService.retrieveAccountById(2l).get();

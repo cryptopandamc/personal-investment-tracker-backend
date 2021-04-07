@@ -1,4 +1,4 @@
-insert into ACCOUNT (account_Id, firstname, lastname, account_alias, BALANCE) values (ACCOUNT_SEQ.nextval, 'sim', 'account', 'Sim Account', 2000.00);
+insert into ACCOUNT (account_Id, account_alias, BALANCE) values (ACCOUNT_SEQ.nextval,  'Sim Account', 2000.00);
 
 Insert into BTC_DATA (BTC_DATA_ID,  trade_date, high, low) values   (BTC_DATA_ID.nextval, 	TO_DATE('2013-10-01' , 'yyyy-mm-dd'),	124.75166	,	122.56349	);
 Insert into BTC_DATA (BTC_DATA_ID,  trade_date, high, low) values   (BTC_DATA_ID.nextval, 	TO_DATE('2013-10-02' , 'yyyy-mm-dd'),	125.7585	,	123.63383	);

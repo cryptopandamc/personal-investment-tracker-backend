@@ -16,33 +16,19 @@ public class Account {
 	private long accountId;
 
 	@Column
-	private String firstname;
-
-	@Column
-	private String lastname;
-
-	@Column
 	private String accountAlias;
 
 	@Column
 	private double balance;
 
-	public Account(double balance) {
+	public Account(String accountAlias, double balance) {
 		super();
+		this.accountAlias = accountAlias;
 		this.balance = balance;
 	}
 
 	public Account() {
 		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public double getBalance() {
-		return balance;
-	}
-
-	public void setBalance(double balance) {
-		this.balance = balance;
 	}
 
 	public long getAccountId() {
@@ -53,28 +39,20 @@ public class Account {
 		this.accountId = accountId;
 	}
 
-	public String getFirstname() {
-		return firstname;
-	}
-
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
-
-	public String getLastname() {
-		return lastname;
-	}
-
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
-	}
-
 	public String getAccountAlias() {
 		return accountAlias;
 	}
 
 	public void setAccountAlias(String accountAlias) {
 		this.accountAlias = accountAlias;
+	}
+
+	public double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
 	}
 
 	@Override
@@ -86,8 +64,6 @@ public class Account {
 		long temp;
 		temp = Double.doubleToLongBits(balance);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
-		result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
 		return result;
 	}
 
@@ -109,23 +85,12 @@ public class Account {
 			return false;
 		if (Double.doubleToLongBits(balance) != Double.doubleToLongBits(other.balance))
 			return false;
-		if (firstname == null) {
-			if (other.firstname != null)
-				return false;
-		} else if (!firstname.equals(other.firstname))
-			return false;
-		if (lastname == null) {
-			if (other.lastname != null)
-				return false;
-		} else if (!lastname.equals(other.lastname))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Account [accountId=" + accountId + ", firstname=" + firstname + ", lastname=" + lastname
-				+ ", accountAlias=" + accountAlias + ", balance=" + balance + "]";
+		return "Account [accountId=" + accountId + ", accountAlias=" + accountAlias + ", balance=" + balance + "]";
 	}
 
 }

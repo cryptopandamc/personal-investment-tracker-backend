@@ -25,4 +25,9 @@ public class BitCoinDataTests {
 		assertTrue(btcDataPoint.getBtcDataId() >0);
 	}
 	
+	//this test requires a user
+	@Test
+	void test_ThatABuyOrder_CanBePlaced() {
+		
+	}
 }
