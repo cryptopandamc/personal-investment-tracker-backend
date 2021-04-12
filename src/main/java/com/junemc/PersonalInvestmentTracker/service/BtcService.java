@@ -1,5 +1,6 @@
 package com.junemc.PersonalInvestmentTracker.service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,5 +17,9 @@ public class BtcService {
 
 	public Optional<Btc> retrieveOne(long btcDataId) {
 		return btcDao.findById(btcDataId);
+	}
+
+	public Btc getPrice(LocalDate dateOfPurchase) {
+		return btcDao.findByTradeDate(dateOfPurchase);
 	}
 }

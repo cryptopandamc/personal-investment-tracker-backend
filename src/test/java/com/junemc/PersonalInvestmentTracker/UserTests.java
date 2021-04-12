@@ -2,6 +2,8 @@ package com.junemc.PersonalInvestmentTracker;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.math.BigDecimal;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,10 +27,14 @@ public class UserTests {
 	
 	@Test
 	void test_ThatAUserCanBeCreated() {
-		Account account = new Account("June's account", 1000);
+		BigDecimal dollarBalance = new BigDecimal(1000);
+		BigDecimal btcBalance = new BigDecimal(0);
+		Account account = new Account("June's account", dollarBalance,  btcBalance);
 		accountService.save(account);
 		User user = new User("june", "mc", account);
 		userService.save(user);
 		assertTrue(user.getUserId() > 0);
 	}
+	
+	
 }

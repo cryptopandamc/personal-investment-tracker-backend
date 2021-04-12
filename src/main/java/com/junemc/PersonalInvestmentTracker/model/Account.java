@@ -1,5 +1,7 @@
 package com.junemc.PersonalInvestmentTracker.model;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,12 +21,16 @@ public class Account {
 	private String accountAlias;
 
 	@Column
-	private double balance;
+	private BigDecimal dollarBalance;
 
-	public Account(String accountAlias, double balance) {
+	@Column
+	private BigDecimal btcBalance;
+
+	public Account(String accountAlias, BigDecimal dollarBalance, BigDecimal btcBalance) {
 		super();
 		this.accountAlias = accountAlias;
-		this.balance = balance;
+		this.dollarBalance = dollarBalance;
+		this.btcBalance = btcBalance;
 	}
 
 	public Account() {
@@ -47,12 +53,20 @@ public class Account {
 		this.accountAlias = accountAlias;
 	}
 
-	public double getBalance() {
-		return balance;
+	public BigDecimal getDollarBalance() {
+		return dollarBalance;
 	}
 
-	public void setBalance(double balance) {
-		this.balance = balance;
+	public void setDollarBalance(BigDecimal dollarBalance) {
+		this.dollarBalance = dollarBalance;
+	}
+
+	public BigDecimal getBtcBalance() {
+		return btcBalance;
+	}
+
+	public void setBtcBalance(BigDecimal btcBalance) {
+		this.btcBalance = btcBalance;
 	}
 
 	@Override
@@ -61,9 +75,8 @@ public class Account {
 		int result = 1;
 		result = prime * result + ((accountAlias == null) ? 0 : accountAlias.hashCode());
 		result = prime * result + (int) (accountId ^ (accountId >>> 32));
-		long temp;
-		temp = Double.doubleToLongBits(balance);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((btcBalance == null) ? 0 : btcBalance.hashCode());
+		result = prime * result + ((dollarBalance == null) ? 0 : dollarBalance.hashCode());
 		return result;
 	}
 
@@ -83,14 +96,23 @@ public class Account {
 			return false;
 		if (accountId != other.accountId)
 			return false;
-		if (Double.doubleToLongBits(balance) != Double.doubleToLongBits(other.balance))
+		if (btcBalance == null) {
+			if (other.btcBalance != null)
+				return false;
+		} else if (!btcBalance.equals(other.btcBalance))
+			return false;
+		if (dollarBalance == null) {
+			if (other.dollarBalance != null)
+				return false;
+		} else if (!dollarBalance.equals(other.dollarBalance))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Account [accountId=" + accountId + ", accountAlias=" + accountAlias + ", balance=" + balance + "]";
+		return "Account [accountId=" + accountId + ", accountAlias=" + accountAlias + ", dollarBalance=" + dollarBalance
+				+ ", btcBalance=" + btcBalance + "]";
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.junemc.PersonalInvestmentTracker.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,7 +23,7 @@ public class User {
 	@Column
 	private String lastname;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Account account;
 
 	public User(String firstname, String lastname, Account account) {
