@@ -14,6 +14,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
@@ -51,6 +54,8 @@ public class BitCoinDataTests {
 	BigDecimal zeroDollarBalance;
 	
 	BigDecimal zeroBtcBalance;
+	
+	Pageable firstPageWithTenElements = PageRequest.of(0, 10);
 	
 	Btc btc;
 
@@ -160,6 +165,11 @@ public class BitCoinDataTests {
 				() -> assertEquals(zeroBtcBalance, account.getBtcBalance()));
 	}
 
+	@Test
+	void test_ThatABtcDataResultCanBeFoundForASpecificDate() {
+		Page<Btc> firstTenResults = btcService.findAll(firstPageWithTenElements);
+		assertTrue(firstTenResults.getNumberOfElements() == 10);
+	}
 	
 	
 }
