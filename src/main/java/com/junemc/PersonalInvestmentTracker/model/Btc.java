@@ -1,5 +1,6 @@
 package com.junemc.PersonalInvestmentTracker.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -9,7 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
-@Entity(name="BTC_DATA")
+@Entity(name = "BTC_DATA")
 public class Btc {
 
 	@Id
@@ -21,12 +22,12 @@ public class Btc {
 	private LocalDate tradeDate;
 
 	@Column
-	private long high;
+	private BigDecimal high;
 
 	@Column
-	private long low;
+	private BigDecimal low;
 
-	public Btc(LocalDate tradeDate, long high, long low) {
+	public Btc(LocalDate tradeDate, BigDecimal high, BigDecimal low) {
 		super();
 		this.tradeDate = tradeDate;
 		this.high = high;
@@ -53,20 +54,20 @@ public class Btc {
 		this.tradeDate = tradeDate;
 	}
 
-	public long getHigh() {
+	public BigDecimal getHigh() {
 		return high;
 	}
 
-	public void setHigh(long high) {
+	public void setHigh(BigDecimal high) {
 		this.high = high;
 	}
 
-	public long getLow() {
-		return low;
+	public void setLow(BigDecimal low) {
+		this.low = low;
 	}
 
-	public void setLow(long low) {
-		this.low = low;
+	public BigDecimal getLow() {
+		return low;
 	}
 
 	@Override
@@ -74,8 +75,8 @@ public class Btc {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (int) (btcDataId ^ (btcDataId >>> 32));
-		result = prime * result + (int) (high ^ (high >>> 32));
-		result = prime * result + (int) (low ^ (low >>> 32));
+		result = prime * result + ((high == null) ? 0 : high.hashCode());
+		result = prime * result + ((low == null) ? 0 : low.hashCode());
 		result = prime * result + ((tradeDate == null) ? 0 : tradeDate.hashCode());
 		return result;
 	}
@@ -91,9 +92,15 @@ public class Btc {
 		Btc other = (Btc) obj;
 		if (btcDataId != other.btcDataId)
 			return false;
-		if (high != other.high)
+		if (high == null) {
+			if (other.high != null)
+				return false;
+		} else if (!high.equals(other.high))
 			return false;
-		if (low != other.low)
+		if (low == null) {
+			if (other.low != null)
+				return false;
+		} else if (!low.equals(other.low))
 			return false;
 		if (tradeDate == null) {
 			if (other.tradeDate != null)
