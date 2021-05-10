@@ -98,7 +98,6 @@ public class BitCoinDataTests {
 		BigDecimal btcToBuyAthighPrice = dollarTradeAmount.divide(btcPriceHigh, 2, RoundingMode.HALF_DOWN);
 		BigDecimal expectedBtcBalance = new BigDecimal((8.02)).setScale(2, RoundingMode.HALF_DOWN);
 		BigDecimal expectedDollarBalance = new BigDecimal((0.00)).setScale(2, RoundingMode.HALF_DOWN);
-
 		BigDecimal initialBTCBalance = account.getBtcBalance();
 		account.setBtcBalance(initialBTCBalance.add(btcToBuyAthighPrice) );
 		account.setDollarBalance(account.getDollarBalance().subtract(dollarTradeAmount)); 
@@ -107,6 +106,27 @@ public class BitCoinDataTests {
 			    () -> assertEquals(expectedBtcBalance, account.getBtcBalance()),
 			    () -> assertEquals(expectedDollarBalance, account.getDollarBalance())
 		);
+	}
+	
+	@Test
+	void test_ThatADifferentBTCAMountIsBoughtUsingTheDailyLow() {
+		Btc btc = btcService.getPrice(LocalDate.of(2013, 10, 01));
+		BigDecimal dollarBalanceToAdd = new BigDecimal(1000.00).setScale(2, RoundingMode.HALF_DOWN);
+		account.setDollarBalance(dollarBalanceToAdd);
+		BigDecimal dollarTradeAmount = account.getDollarBalance().setScale(2, RoundingMode.HALF_DOWN);
+		BigDecimal btcPriceLow = btc.getLow().setScale(2, RoundingMode.HALF_DOWN);
+		BigDecimal btcToBuyAtLowPrice = dollarTradeAmount.divide(btcPriceLow, 2, RoundingMode.HALF_DOWN);
+		BigDecimal expectedBtcBalance = new BigDecimal((8.16)).setScale(2, RoundingMode.HALF_DOWN);
+		BigDecimal expectedDollarBalance = new BigDecimal((0.00)).setScale(2, RoundingMode.HALF_DOWN);
+		BigDecimal initialBTCBalance = account.getBtcBalance();
+		account.setBtcBalance(initialBTCBalance.add(btcToBuyAtLowPrice) );
+		account.setDollarBalance(account.getDollarBalance().subtract(dollarTradeAmount)); 
+		accountService.save(account);
+		assertAll( "account",
+			    () -> assertEquals(expectedBtcBalance, account.getBtcBalance()),
+			    () -> assertEquals(expectedDollarBalance, account.getDollarBalance())
+		);
+		
 	}
 
 }
