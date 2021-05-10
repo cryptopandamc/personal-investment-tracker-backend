@@ -42,14 +42,28 @@ public class BitCoinDataTests {
 
 	private User user;
 
+	BigDecimal btcPriceHigh;// = new BigDecimal(0.00);
+
+	BigDecimal btcPriceLow;// = new BigDecimal(0.00);
+	
+	BigDecimal dollarTradeAmount ;
+
+	BigDecimal zeroDollarBalance;
+	
+	Btc btc;
+
 	@BeforeEach
 	void setUp() {
-		BigDecimal dollarBalance = new BigDecimal(0);
+		zeroDollarBalance = new BigDecimal(0.00).setScale(2, RoundingMode.HALF_DOWN);;
 		BigDecimal btcBalance = new BigDecimal(0);
-		account = new Account("Test account", dollarBalance, btcBalance);
+		account = new Account("Test account", zeroDollarBalance, btcBalance);
 		accounts.add(account);
 		user = new User("Fred", "Flintstone", account);
 		userService.save(user);
+		btc = btcService.getPrice(LocalDate.of(2013, 10, 01));
+		btcPriceHigh = btc.getHigh().setScale(2, RoundingMode.HALF_DOWN);
+		btcPriceLow = btc.getLow().setScale(2, RoundingMode.HALF_DOWN);
+		dollarTradeAmount = new BigDecimal(1000.00).setScale(2, RoundingMode.HALF_DOWN);
 	}
 
 	@Test
@@ -58,75 +72,72 @@ public class BitCoinDataTests {
 		assertTrue(btcDataPoint.getBtcDataId() > 0);
 	}
 
-	// this test requires a user
-	// prob be two step in the app, show price, show num sats can be bought, confirm
 	@Test
 	void test_ThatADailyHighProce_CanBereturned() {
-		Btc btc = btcService.getPrice(LocalDate.of(2013, 10, 01));
 		BigDecimal expected = new BigDecimal("124.75");
-		BigDecimal btcPriceHigh = btc.getHigh();
 		assertEquals(expected, btcPriceHigh);
 	}
 
 	@Test
 	void test_ThatADailyLowPrice_CanBeReturned_ForAGivenDate() {
-		Btc btc = btcService.getPrice(LocalDate.of(2013, 10, 01));
-		BigDecimal btcPriceLow = btc.getLow().setScale(2, RoundingMode.HALF_EVEN);
-		BigDecimal expected = new BigDecimal(122.56).setScale(2, RoundingMode.HALF_EVEN);
+		BigDecimal btcPriceLow = btc.getLow().setScale(2, RoundingMode.HALF_DOWN);
+		BigDecimal expected = new BigDecimal(122.56).setScale(2, RoundingMode.HALF_DOWN);
 		assertEquals(expected, btcPriceLow);
 	}
 
 	@Test
 	void test_ThatABTCAmount_forADollarAmount_CanBeObtainedUsingFullDollarBalance() {
-		Btc btc = btcService.getPrice(LocalDate.of(2013, 10, 01));
-		BigDecimal dollarBalanceToAdd = new BigDecimal(1000.00).setScale(2, RoundingMode.HALF_DOWN);
-		account.setDollarBalance(dollarBalanceToAdd);
+		account.setDollarBalance(dollarTradeAmount);
 		BigDecimal dollarTradeAmount = account.getDollarBalance().setScale(2, RoundingMode.HALF_DOWN);
-		BigDecimal btcPriceHigh = btc.getHigh().setScale(2, RoundingMode.HALF_DOWN);
 		BigDecimal btcToBuyAthighPrice = dollarTradeAmount.divide(btcPriceHigh, 2, RoundingMode.HALF_DOWN);
 		BigDecimal amountOfBtcToBuy = new BigDecimal((8.02)).setScale(2, RoundingMode.HALF_DOWN);
 		assertEquals(amountOfBtcToBuy, btcToBuyAthighPrice);
 	}
-	
+
 	@Test
 	void test_ThatBTC_CanBeBoughtByReducingDollarBalanceAndIncreasingBTCBalance() {
-		Btc btc = btcService.getPrice(LocalDate.of(2013, 10, 01));
-		BigDecimal dollarBalanceToAdd = new BigDecimal(1000.00).setScale(2, RoundingMode.HALF_DOWN);
-		account.setDollarBalance(dollarBalanceToAdd);
+		account.setDollarBalance(dollarTradeAmount);
 		BigDecimal dollarTradeAmount = account.getDollarBalance().setScale(2, RoundingMode.HALF_DOWN);
-		BigDecimal btcPriceHigh = btc.getHigh().setScale(2, RoundingMode.HALF_DOWN);
 		BigDecimal btcToBuyAthighPrice = dollarTradeAmount.divide(btcPriceHigh, 2, RoundingMode.HALF_DOWN);
 		BigDecimal expectedBtcBalance = new BigDecimal((8.02)).setScale(2, RoundingMode.HALF_DOWN);
 		BigDecimal expectedDollarBalance = new BigDecimal((0.00)).setScale(2, RoundingMode.HALF_DOWN);
 		BigDecimal initialBTCBalance = account.getBtcBalance();
-		account.setBtcBalance(initialBTCBalance.add(btcToBuyAthighPrice) );
-		account.setDollarBalance(account.getDollarBalance().subtract(dollarTradeAmount)); 
+		account.setBtcBalance(initialBTCBalance.add(btcToBuyAthighPrice));
+		account.setDollarBalance(account.getDollarBalance().subtract(dollarTradeAmount));
 		accountService.save(account);
-		assertAll( "account",
-			    () -> assertEquals(expectedBtcBalance, account.getBtcBalance()),
-			    () -> assertEquals(expectedDollarBalance, account.getDollarBalance())
-		);
+		assertAll("account", () -> assertEquals(expectedBtcBalance, account.getBtcBalance()),
+				() -> assertEquals(expectedDollarBalance, account.getDollarBalance()));
 	}
-	
+
 	@Test
 	void test_ThatADifferentBTCAMountIsBoughtUsingTheDailyLow() {
-		Btc btc = btcService.getPrice(LocalDate.of(2013, 10, 01));
-		BigDecimal dollarBalanceToAdd = new BigDecimal(1000.00).setScale(2, RoundingMode.HALF_DOWN);
-		account.setDollarBalance(dollarBalanceToAdd);
+		account.setDollarBalance(dollarTradeAmount);
 		BigDecimal dollarTradeAmount = account.getDollarBalance().setScale(2, RoundingMode.HALF_DOWN);
-		BigDecimal btcPriceLow = btc.getLow().setScale(2, RoundingMode.HALF_DOWN);
 		BigDecimal btcToBuyAtLowPrice = dollarTradeAmount.divide(btcPriceLow, 2, RoundingMode.HALF_DOWN);
 		BigDecimal expectedBtcBalance = new BigDecimal((8.16)).setScale(2, RoundingMode.HALF_DOWN);
 		BigDecimal expectedDollarBalance = new BigDecimal((0.00)).setScale(2, RoundingMode.HALF_DOWN);
 		BigDecimal initialBTCBalance = account.getBtcBalance();
-		account.setBtcBalance(initialBTCBalance.add(btcToBuyAtLowPrice) );
-		account.setDollarBalance(account.getDollarBalance().subtract(dollarTradeAmount)); 
+		account.setBtcBalance(initialBTCBalance.add(btcToBuyAtLowPrice));
+		account.setDollarBalance(account.getDollarBalance().subtract(dollarTradeAmount));
 		accountService.save(account);
-		assertAll( "account",
-			    () -> assertEquals(expectedBtcBalance, account.getBtcBalance()),
-			    () -> assertEquals(expectedDollarBalance, account.getDollarBalance())
-		);
-		
+		assertAll("account", () -> assertEquals(expectedBtcBalance, account.getBtcBalance()),
+				() -> assertEquals(expectedDollarBalance, account.getDollarBalance()));
+
+	}
+
+	@Test
+	void test_ThatBTCCanBeExchangedForDollarsUsingTheDailyHigh() {
+		BigDecimal btcBalanceToStartTrade = dollarTradeAmount.divide(btcPriceHigh, 2, RoundingMode.HALF_DOWN);
+		account.setBtcBalance(btcBalanceToStartTrade);
+		accountService.save(account);
+		BigDecimal btcToTrade = account.getBtcBalance();
+		BigDecimal dollarBalanceAfterTrade = btcPriceHigh.multiply(btcToTrade).setScale(2, RoundingMode.HALF_DOWN);
+		BigDecimal expectedDollarValueAfterTrade =dollarBalanceAfterTrade;
+		account.setDollarBalance(dollarBalanceAfterTrade);
+		account.setBtcBalance(btcBalanceToStartTrade.subtract(btcBalanceToStartTrade));
+		accountService.save(account);
+		assertAll("account", () -> assertEquals(expectedDollarValueAfterTrade, dollarBalanceAfterTrade),
+				() -> assertEquals(zeroDollarBalance, account.getBtcBalance()));
 	}
 
 }
