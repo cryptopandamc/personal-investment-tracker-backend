@@ -42,19 +42,21 @@ public class BitCoinDataTests {
 
 	private User user;
 
-	BigDecimal btcPriceHigh;// = new BigDecimal(0.00);
+	BigDecimal btcPriceHigh;
 
-	BigDecimal btcPriceLow;// = new BigDecimal(0.00);
+	BigDecimal btcPriceLow;
 	
-	BigDecimal dollarTradeAmount ;
+	BigDecimal dollarTradeAmount;
 
 	BigDecimal zeroDollarBalance;
+	
+	BigDecimal zeroBtcBalance;
 	
 	Btc btc;
 
 	@BeforeEach
 	void setUp() {
-		zeroDollarBalance = new BigDecimal(0.00).setScale(2, RoundingMode.HALF_DOWN);;
+		zeroDollarBalance = new BigDecimal(0.00).setScale(2, RoundingMode.HALF_DOWN);
 		BigDecimal btcBalance = new BigDecimal(0);
 		account = new Account("Test account", zeroDollarBalance, btcBalance);
 		accounts.add(account);
@@ -64,6 +66,7 @@ public class BitCoinDataTests {
 		btcPriceHigh = btc.getHigh().setScale(2, RoundingMode.HALF_DOWN);
 		btcPriceLow = btc.getLow().setScale(2, RoundingMode.HALF_DOWN);
 		dollarTradeAmount = new BigDecimal(1000.00).setScale(2, RoundingMode.HALF_DOWN);
+		zeroBtcBalance = new BigDecimal(0.00).setScale(2, RoundingMode.HALF_DOWN);
 	}
 
 	@Test
@@ -132,12 +135,31 @@ public class BitCoinDataTests {
 		accountService.save(account);
 		BigDecimal btcToTrade = account.getBtcBalance();
 		BigDecimal dollarBalanceAfterTrade = btcPriceHigh.multiply(btcToTrade).setScale(2, RoundingMode.HALF_DOWN);
-		BigDecimal expectedDollarValueAfterTrade =dollarBalanceAfterTrade;
+		BigDecimal expectedDollarValueAfterTrade = dollarBalanceAfterTrade;
 		account.setDollarBalance(dollarBalanceAfterTrade);
 		account.setBtcBalance(btcBalanceToStartTrade.subtract(btcBalanceToStartTrade));
 		accountService.save(account);
 		assertAll("account", () -> assertEquals(expectedDollarValueAfterTrade, dollarBalanceAfterTrade),
-				() -> assertEquals(zeroDollarBalance, account.getBtcBalance()));
+				() -> assertEquals(zeroBtcBalance, account.getBtcBalance()));
 	}
 
+	@Test
+	void test_ThatBTCCanBeExchangedForDollarsUsingTheDailyLow() {
+		BigDecimal btcBalanceToStartTrade = dollarTradeAmount.divide(btcPriceHigh, 2, RoundingMode.HALF_DOWN);
+		account.setBtcBalance(btcBalanceToStartTrade);
+		accountService.save(account);
+		BigDecimal btcToTrade = account.getBtcBalance();
+		BigDecimal dollarBalanceAfterTrade = btcPriceLow.multiply(btcToTrade).setScale(2, RoundingMode.HALF_DOWN);
+		BigDecimal expectedDollarValueAfterTrade = dollarBalanceAfterTrade;
+		account.setDollarBalance(dollarBalanceAfterTrade);
+		account.setBtcBalance(btcBalanceToStartTrade.subtract(btcBalanceToStartTrade));
+		accountService.save(account);
+		System.err.println(btcPriceLow);
+		System.err.println(dollarBalanceAfterTrade);
+		assertAll("account", () -> assertEquals(expectedDollarValueAfterTrade, dollarBalanceAfterTrade),
+				() -> assertEquals(zeroBtcBalance, account.getBtcBalance()));
+	}
+
+	
+	
 }
