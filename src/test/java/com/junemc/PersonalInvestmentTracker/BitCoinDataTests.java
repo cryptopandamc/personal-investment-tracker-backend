@@ -57,6 +57,8 @@ public class BitCoinDataTests {
 	
 	Pageable firstPageWithTenElements = PageRequest.of(0, 10);
 	
+	Pageable SecondPageWithTenElements = PageRequest.of(1, 10);
+	
 	Btc btc;
 
 	@BeforeEach
@@ -171,5 +173,11 @@ public class BitCoinDataTests {
 		assertTrue(firstTenResults.getNumberOfElements() == 10);
 	}
 	
+	@Test
+	void test_ThatOtherPagesRetrieveOtherDataSets() {
+		Page<Btc> secondTenResults = btcService.findAll(SecondPageWithTenElements);
+		System.err.println();
+		assertTrue(secondTenResults.getNumberOfElements() == 10);
+	}
 	
 }
