@@ -69,7 +69,7 @@ public class BitCoinDataTests {
 		accounts.add(account);
 		user = new User("Fred", "Flintstone", account);
 		userService.save(user);
-		btc = btcService.getPrice(LocalDate.of(2013, 10, 01));
+		btc = btcService.getDayData(LocalDate.of(2013, 10, 01));
 		btcPriceHigh = btc.getHigh().setScale(2, RoundingMode.HALF_DOWN);
 		btcPriceLow = btc.getLow().setScale(2, RoundingMode.HALF_DOWN);
 		dollarTradeAmount = new BigDecimal(1000.00).setScale(2, RoundingMode.HALF_DOWN);

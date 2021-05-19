@@ -21,7 +21,7 @@ public class BtcService {
 		return btcDao.findById(btcDataId);
 	}
 
-	public Btc getPrice(LocalDate dateOfPurchase) {
+	public Btc getDayData(LocalDate dateOfPurchase) {
 		return btcDao.findByTradeDate(dateOfPurchase);
 	}
 	
